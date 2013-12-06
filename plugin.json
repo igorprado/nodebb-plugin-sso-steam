@@ -1,0 +1,19 @@
+{
+  "id": "nodebb-plugin-openid-steam",
+  "name": "NodeBB OpenID Steam",
+  "description": "NodeBB Plugin that allows users to login/register via their Steam account.",
+  "url": "https://github.com/igorprado/nodebb-plugin-openid-steam",
+  "library": "./library.js",
+  "hooks": [
+    {
+      "hook": "filter:auth.init", "method": "getStrategy", "callbacked": false
+    },
+    {
+      "hook": "filter:admin.header.build", "method": "addMenuItem", "callbacked": false
+    },
+    {
+      "hook": "filter:admin.create_routes", "method": "addAdminRoute", "callbacked": true
+    }
+  ],
+  "staticDir": "./static"
+}
