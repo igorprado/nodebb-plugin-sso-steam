@@ -1,0 +1,36 @@
+{
+  "name": "nodebb-plugin-openid-steam",
+  "version": "0.0.1",
+  "description": "NodeBB OpenID Steam",
+  "main": "library.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/igorprado/nodebb-plugin-openid-steam"
+  },
+  "keywords": [
+    "nodebb",
+    "plugin",
+    "openid",
+    "steam",
+    "single sign on",
+    "registration"
+  ],
+  "author": {
+    "name": "Igor Prado",
+    "email": "igorprado@gmail.com"
+  },
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/igorprado/nodebb-plugin-openid-steam/issues"
+  },
+  "readme": "",
+  "readmeFilename": "README.md",
+  "_id": "nodebb-plugin-openid-steam@0.0.1",
+  "_from": "nodebb-plugin-openid-steam@~0.0.1",
+  "dependencies": {
+    "passport-steam": "~0.1.3"
+  }
+}

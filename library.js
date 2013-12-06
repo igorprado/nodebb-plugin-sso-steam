@@ -84,6 +84,7 @@
             User.setUserField(uid, 'profileurl', profileUrl);
             RDB.hset('steamid:uid', steamID, uid);
 
+
             // Save their avatar
             User.setUserField(uid, 'uploadedpicture', avatar);
             User.setUserField(uid, 'picture', avatar);
