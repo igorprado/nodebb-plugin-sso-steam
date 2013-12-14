@@ -1,8 +1,8 @@
 (function(module) {
   "use strict";
 
-  var User = module.parent.require('../src/user.js'),
-      RDB = module.parent.require('../src/redis.js'),
+  var user = module.parent.require('../src/user.js'),
+      db = module.parent.require('../src/database.js'),
       passport = module.parent.require('passport'),
       passportSteam = require('passport-steam').Strategy,
       fs = module.parent.require('fs'),
@@ -43,7 +43,6 @@
                 if (err) {
                   return done(err);
                 }
-                console.log(done);
                 done(null, user);
               });
 
@@ -75,19 +74,19 @@
         });
       } else {
         // New User
-        User.create(username, undefined, undefined, function(err, uid) {
+        user.create(username, undefined, undefined, function(err, uid) {
           if (err !== null) {
             callback(err);
           } else {
             // Save steam-specific information to the user
-            User.setUserField(uid, 'steamid', steamID);
-            User.setUserField(uid, 'profileurl', profileUrl);
-            RDB.hset('steamid:uid', steamID, uid);
+            user.setUserField(uid, 'steamid', steamID);
+            user.setUserField(uid, 'profileurl', profileUrl);
+            db.setObjectField('steamid:uid', steamID, uid);
 
 
             // Save their avatar
-            User.setUserField(uid, 'uploadedpicture', avatar);
-            User.setUserField(uid, 'picture', avatar);
+            user.setUserField(uid, 'uploadedpicture', avatar);
+            user.setUserField(uid, 'picture', avatar);
 
             callback(null, {
               uid: uid
@@ -99,10 +98,11 @@
   }
 
   Steam.getUidBySteamID = function(steamID, callback) {
-    RDB.hget('steamid:uid', steamID, function(err, uid) {
+    db.getObjectField('steamid:uid', steamID, function(err, uid) {
       if (err !== null) {
-        RDB.handle(err);
+        // TODO: handle error
       }
+
       callback(uid);
     });
   };
