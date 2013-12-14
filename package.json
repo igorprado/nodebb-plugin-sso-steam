@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-openid-steam",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "NodeBB OpenID Steam",
   "main": "library.js",
   "scripts": {
