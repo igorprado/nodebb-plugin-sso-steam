@@ -1,7 +1,8 @@
 (function(module) {
   "use strict";
 
-  var user = module.parent.require('../src/user.js'),
+
+  var user = module.parent.require('./user.js'),
       db = module.parent.require('../src/database.js'),
       passport = module.parent.require('passport'),
       passportSteam = require('passport-steam').Strategy,
@@ -66,7 +67,11 @@
   };
 
   Steam.login = function(steamID, username, avatar, profileUrl, callback) {
-    Steam.getUidBySteamID(steamID, function(uid) {
+    Steam.getUidBySteamID(steamID, function(err, uid) {
+      if(err) {
+        return callback(err);
+      }
+
       if (uid !== null) {
         // Existing User
         callback(null, {
@@ -74,7 +79,7 @@
         });
       } else {
         // New User
-        user.create(username, undefined, undefined, function(err, uid) {
+        user.create({username: username}, function(err, uid) {
           if (err !== null) {
             callback(err);
           } else {
@@ -100,10 +105,9 @@
   Steam.getUidBySteamID = function(steamID, callback) {
     db.getObjectField('steamid:uid', steamID, function(err, uid) {
       if (err !== null) {
-        // TODO: handle error
+        return callback(err);
       }
-
-      callback(uid);
+      callback(null, uid);
     });
   };
 
