@@ -4,6 +4,7 @@
 
   var user = module.parent.require('./user.js'),
       db = module.parent.require('../src/database.js'),
+      meta = module.parent.require('./meta'),
       passport = module.parent.require('passport'),
       passportSteam = require('passport-steam').Strategy,
       fs = module.parent.require('fs'),
