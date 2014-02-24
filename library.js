@@ -24,7 +24,7 @@
   Steam.getStrategy = function(strategies) {
     if (meta.config['social:steam:apikey']) {
       passport.use(new passportSteam({
-        returnURL: module.parent.require('nconf').get('url') + 'auth/steam/callback',
+        returnURL: module.parent.require('nconf').get('url') + '/auth/steam/callback',
         realm: module.parent.require('nconf').get('url')
       }, function(identifier, profile, done) {
         process.nextTick(function () {
