@@ -6,7 +6,7 @@
   "library": "./library.js",
   "hooks": [
     {
-      "hook": "filter:app.load", "method": "init"
+      "hook": "action:app.load", "method": "init"
     },
     {
       "hook": "filter:auth.init", "method": "getStrategy"
