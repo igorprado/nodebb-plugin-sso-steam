@@ -4,7 +4,7 @@ NodeBB Plugin that allows users to login/register via their Steam account.
 
 ## Installation
 
-    npm install nodebb-plugin-openid-steam
+    npm install nodebb-plugin-sso-steam
 
 ## Configuration
 
