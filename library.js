@@ -14,14 +14,23 @@
   var constants = Object.freeze({
     'name': 'Steam',
     'admin': {
-      'route': '/steam',
-      'icon': 'fa-gamepad'  // while there are no Steam icon on FontAwesome
+      'route': '/plugins/openid-steam',
+      'icon': 'fa-steam'  // while there are no Steam icon on FontAwesome
     }
   });
 
   var Steam = {};
 
-  Steam.getStrategy = function(strategies) {
+  Steam.init = function(app, middleware, controllers) {
+    function render(req, res, next) {
+      res.render('admin/plugins/openid-steam', {});
+    }
+
+    app.get('/admin/plugins/openid-steam', middleware.admin.buildHeader, render);
+    app.get('/api/admin/plugins/openid-steam', render);
+  };
+
+  Steam.getStrategy = function(strategies, callback) {
     if (meta.config['social:steam:apikey']) {
       passport.use(new passportSteam({
         returnURL: module.parent.require('nconf').get('url') + '/auth/steam/callback',
@@ -59,12 +68,12 @@
         name: 'steam',
         url: '/auth/steam',
         callbackURL: '/auth/steam/callback',
-        icon: 'check',
+        icon: 'steam',
         scope: 'user:username'
       });
     }
 
-    return strategies;
+    callback(null, strategies);
   };
 
   Steam.login = function(steamID, username, avatar, profileUrl, callback) {
@@ -112,35 +121,15 @@
     });
   };
 
-  Steam.addMenuItem = function(custom_header) {
+  Steam.addMenuItem = function(custom_header, callback) {
     custom_header.authentication.push({
       "route": constants.admin.route,
       "icon": constants.admin.icon,
       "name": constants.name
     });
 
-    return custom_header;
+    callback(null, custom_header);
   }
-
-  Steam.addAdminRoute = function(custom_routes, callback) {
-    fs.readFile(path.resolve(__dirname, './static/admin.tpl'), function (err, template) {
-      custom_routes.routes.push({
-        "route": constants.admin.route,
-        "method": "get",
-        "options": function(req, res, callback) {
-          callback({
-            req: req,
-            res: res,
-            route: constants.admin.route,
-            name: constants.name,
-            content: template
-          });
-        }
-      });
-
-      callback(null, custom_routes);
-    });
-  };
 
   module.exports = Steam;
 }(module));
