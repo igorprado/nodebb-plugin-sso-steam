@@ -14,20 +14,22 @@
   var constants = Object.freeze({
     'name': 'Steam',
     'admin': {
-      'route': '/plugins/openid-steam',
+      'route': '/plugins/sso-steam',
       'icon': 'fa-steam'  // while there are no Steam icon on FontAwesome
     }
   });
 
   var Steam = {};
 
-  Steam.init = function(app, middleware, controllers) {
+  Steam.init = function(app, middleware, controllers, callback) {
     function render(req, res, next) {
-      res.render('admin/plugins/openid-steam', {});
+      res.render('admin/plugins/sso-steam', {});
     }
 
-    app.get('/admin/plugins/openid-steam', middleware.admin.buildHeader, render);
-    app.get('/api/admin/plugins/openid-steam', render);
+    app.get('/admin/plugins/sso-steam', middleware.admin.buildHeader, render);
+    app.get('/api/admin/plugins/sso-steam', render);
+
+	callback(app, middleware, controllers);
   };
 
   Steam.getStrategy = function(strategies, callback) {
@@ -129,7 +131,7 @@
     });
 
     callback(null, custom_header);
-  }
+  };
 
   module.exports = Steam;
 }(module));
