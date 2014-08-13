@@ -6,7 +6,7 @@
   "library": "./library.js",
   "hooks": [
     {
-      "hook": "action:app.load", "method": "init"
+      "hook": "static:app.load", "method": "init"
     },
     {
       "hook": "filter:auth.init", "method": "getStrategy"
@@ -16,5 +16,6 @@
     }
   ],
   "templates": "static/templates",
-  "compatibility": "~0.5.0"
+  "compatibility": "~0.5.0",
+  "minver": "0.5.0"
 }
