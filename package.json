@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-sso-steam",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "NodeBB Steam SSO (OpenID)",
   "main": "library.js",
   "scripts": {
@@ -26,7 +26,7 @@
   "bugs": {
     "url": "https://github.com/igorprado/nodebb-plugin-sso-steam/issues"
   },
-  "readme": "# NodeBB OpenID Steam\n\nNodeBB Plugin that allows users to login/register via their Steam account.\n\n## Installation\n\n    npm install nodebb-plugin-openid-steam",
+  "readme": "# NodeBB OpenID Steam\n\nNodeBB Plugin that allows users to login/register via their Steam account.\n\n## Installation\n\n    npm install nodebb-plugin-sso-steam",
   "readmeFilename": "README.md",
   "dependencies": {
     "passport-steam": "~0.1.3"
