@@ -71,7 +71,7 @@
         name: 'steam',
         url: '/auth/steam',
         callbackURL: '/auth/steam/callback',
-        icon: 'steam',
+        icon: 'fa-steam',
         scope: 'user:username'
       });
     }
