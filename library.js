@@ -36,7 +36,8 @@
     if (meta.config['social:steam:apikey']) {
       passport.use(new passportSteam({
         returnURL: module.parent.require('nconf').get('url') + '/auth/steam/callback',
-        realm: module.parent.require('nconf').get('url')
+        realm: module.parent.require('nconf').get('url'),
+        apiKey: meta.config['social:steam:apikey']
       }, function(identifier, profile, done) {
         process.nextTick(function () {
           // As Steam Passport does't not provide the username, steamid and avatar information, we have to get from Steam API using http get request.
