@@ -16,6 +16,6 @@
     }
   ],
   "templates": "static/templates",
-  "compatibility": "~0.5.0",
-  "minver": "0.5.0"
+  "compatibility": "~0.6.0",
+  "minver": "0.6.0"
 }
