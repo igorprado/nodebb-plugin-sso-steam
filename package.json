@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-sso-steam",
-  "version": "0.0.8",
+  "version": "0.0.8-nez1",
   "description": "NodeBB Steam SSO (OpenID)",
   "main": "library.js",
   "scripts": {
@@ -22,6 +22,9 @@
     "name": "Igor Prado",
     "email": "igorprado@gmail.com"
   },
+  "contributors": [
+      { "name": "nezroy", "email": "nezroy@gmail.com" }
+  ],
   "license": "BSD-2-Clause",
   "bugs": {
     "url": "https://github.com/igorprado/nodebb-plugin-sso-steam/issues"

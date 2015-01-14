@@ -4,12 +4,11 @@
 
   var user = module.parent.require('./user.js'),
       db = module.parent.require('../src/database.js'),
-      meta = module.parent.require('./meta'),
       passport = module.parent.require('passport'),
       passportSteam = require('passport-steam').Strategy,
-      fs = module.parent.require('fs'),
-      path = module.parent.require('path'),
-      http = module.parent.require('http');
+      http = module.parent.require('http'),
+        Settings = module.parent.require('./settings'),
+        SocketAdmin = module.parent.require('./socket.io/admin');
 
   var constants = Object.freeze({
     'name': 'Steam',
@@ -20,28 +19,37 @@
   });
 
   var Steam = {};
-
-  Steam.init = function(app, middleware, controllers, callback) {
-    function render(req, res, next) {
-      res.render('admin/plugins/sso-steam', {});
+    
+    var config = new Settings('sso-steam', '0.1', { apiKey: '' });
+    SocketAdmin.settings.sync_sso_steam = function() {
+        config.sync();
+    };
+    
+  Steam.init = function(params, callback) {
+    function render(req, res) {
+            res.render('admin/plugins/sso-steam');
+        }
+        function render2(req, res) {
+            res.json(config.get());
     }
 
-    app.get('/admin/plugins/sso-steam', middleware.admin.buildHeader, render);
-    app.get('/api/admin/plugins/sso-steam', render);
+    params.router.get('/admin/plugins/sso-steam', params.middleware.admin.buildHeader, render);
+    params.router.get('/api/admin/plugins/sso-steam', render2);
 
-	callback(app, middleware, controllers);
+	callback();
   };
 
   Steam.getStrategy = function(strategies, callback) {
-    if (meta.config['social:steam:apikey']) {
+        var apiKey = config.get("apiKey");
+    if (apiKey) {
       passport.use(new passportSteam({
         returnURL: module.parent.require('nconf').get('url') + '/auth/steam/callback',
         realm: module.parent.require('nconf').get('url'),
-        apiKey: meta.config['social:steam:apikey']
+        apiKey: apiKey
       }, function(identifier, profile, done) {
         process.nextTick(function () {
           // As Steam Passport does't not provide the username, steamid and avatar information, we have to get from Steam API using http get request.
-          var clientApiKey = meta.config['social:steam:apikey'],
+          var clientApiKey = apiKey,
               Steam64Id = identifier.replace('http://steamcommunity.com/openid/id/', ''),
               apiUrl = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + clientApiKey + '&steamids=' + Steam64Id,
               player = {};
@@ -113,7 +121,7 @@
         });
       }
     });
-  }
+  };
 
   Steam.getUidBySteamID = function(steamID, callback) {
     db.getObjectField('steamid:uid', steamID, function(err, uid) {
