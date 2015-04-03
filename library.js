@@ -4,52 +4,32 @@
 
   var user = module.parent.require('./user.js'),
       db = module.parent.require('../src/database.js'),
+      meta = module.parent.require('./meta'),
       passport = module.parent.require('passport'),
       passportSteam = require('passport-steam').Strategy,
       http = module.parent.require('http'),
-        Settings = module.parent.require('./settings'),
-        SocketAdmin = module.parent.require('./socket.io/admin');
+      winston = module.parent.require('winston');
 
   var constants = Object.freeze({
     'name': 'Steam',
     'admin': {
-      'route': '/plugins/sso-steam',
-      'icon': 'fa-steam'  // while there are no Steam icon on FontAwesome
+      'route': '/steam',
+      'icon': 'fa-steam'
     }
   });
 
   var Steam = {};
-    
-    var config = new Settings('sso-steam', '0.1', { apiKey: '' });
-    SocketAdmin.settings.sync_sso_steam = function() {
-        config.sync();
-    };
-    
-  Steam.init = function(params, callback) {
-    function render(req, res) {
-            res.render('admin/plugins/sso-steam');
-        }
-        function render2(req, res) {
-            res.json(config.get());
-    }
-
-    params.router.get('/admin/plugins/sso-steam', params.middleware.admin.buildHeader, render);
-    params.router.get('/api/admin/plugins/sso-steam', render2);
-
-	callback();
-  };
 
   Steam.getStrategy = function(strategies, callback) {
-        var apiKey = config.get("apiKey");
-    if (apiKey) {
+    if (Steam.hasOwnProperty('apiKey')) {
       passport.use(new passportSteam({
         returnURL: module.parent.require('nconf').get('url') + '/auth/steam/callback',
         realm: module.parent.require('nconf').get('url'),
-        apiKey: apiKey
+        apiKey: Steam.apiKey
       }, function(identifier, profile, done) {
         process.nextTick(function () {
           // As Steam Passport does't not provide the username, steamid and avatar information, we have to get from Steam API using http get request.
-          var clientApiKey = apiKey,
+          var clientApiKey = Steam.apiKey,
               Steam64Id = identifier.replace('http://steamcommunity.com/openid/id/', ''),
               apiUrl = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + clientApiKey + '&steamids=' + Steam64Id,
               player = {};
@@ -141,6 +121,25 @@
 
     callback(null, custom_header);
   };
+
+  function renderAdmin(req, res, callback) {
+		res.render('sso/steam/admin', {});
+	}
+
+  Steam.init = function(data, callback) {
+		data.router.get('/admin/steam', data.middleware.admin.buildHeader, renderAdmin);
+		data.router.get('/api/admin/steam', renderAdmin);
+
+		meta.settings.get('sso-steam', function(err, config) {
+			if (config.hasOwnProperty('apiKey')) {
+				Steam.apiKey = config.apiKey;
+			} else {
+				winston.warn('[plugins/sso-steam] Please complete Steam SSO setup at: /admin/plugins/sso-steam');
+			}
+
+			callback();
+		});
+	};
 
   module.exports = Steam;
 }(module));

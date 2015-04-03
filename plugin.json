@@ -1,21 +1,19 @@
 {
   "id": "nodebb-plugin-sso-steam",
-  "name": "Steam SSO (OpenID)",
-  "description": "Allows users to login/register via their Steam account.",
+  "name": "NodeBB Steam SSO",
+  "description": "NodeBB Plugin that allows users to login/register via their Steam account.",
   "url": "https://github.com/igorprado/nodebb-plugin-sso-steam",
   "library": "./library.js",
   "hooks": [
-    {
-      "hook": "static:app.load", "method": "init"
-    },
     {
       "hook": "filter:auth.init", "method": "getStrategy"
     },
     {
       "hook": "filter:admin.header.build", "method": "addMenuItem"
+    },
+    {
+      "hook": "static:app.load", "method": "init"
     }
   ],
-  "templates": "static/templates",
-  "compatibility": "~0.6.0",
-  "minver": "0.6.0"
+  "templates": "./templates"
 }

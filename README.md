@@ -1,4 +1,4 @@
-# NodeBB OpenID Steam
+# NodeBB Steam SSO
 
 NodeBB Plugin that allows users to login/register via their Steam account.
 
