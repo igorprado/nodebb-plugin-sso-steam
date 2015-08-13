@@ -132,15 +132,15 @@
   };
 
   function renderAdmin(req, res, callback) {
-		res.render('sso/steam/admin', {});
-	}
+    res.render('sso/steam/admin', {});
+  }
 
   Steam.init = function(data, callback) {
-		data.router.get('/admin/steam', data.middleware.admin.buildHeader, renderAdmin);
-		data.router.get('/api/admin/steam', renderAdmin);
+    data.router.get('/admin/steam', data.middleware.admin.buildHeader, renderAdmin);
+    data.router.get('/api/admin/steam', renderAdmin);
 
-        callback();
-	};
+    callback();
+  };
 
   module.exports = Steam;
 }(module));
