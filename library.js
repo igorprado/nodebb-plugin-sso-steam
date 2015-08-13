@@ -21,18 +21,27 @@
   var Steam = {};
 
   Steam.getStrategy = function(strategies, callback) {
-    if (Steam.hasOwnProperty('apiKey')) {
+
+    meta.settings.get('sso-steam', function(err, config) {
+      var clientApiKey = config.apiKey;
+      if (!clientApiKey) {
+        winston.warn('[plugins/sso-steam] Please complete Steam SSO setup at: /admin/plugins/sso-steam');
+        callback(null, strategies);
+        return;
+      }
+
       passport.use(new passportSteam({
         returnURL: module.parent.require('nconf').get('url') + '/auth/steam/callback',
         realm: module.parent.require('nconf').get('url'),
-        apiKey: Steam.apiKey
+        apiKey: clientApiKey
       }, function(identifier, profile, done) {
         process.nextTick(function () {
           // As Steam Passport does't not provide the username, steamid and avatar information, we have to get from Steam API using http get request.
-          var clientApiKey = Steam.apiKey,
+          var
               Steam64Id = identifier.replace('http://steamcommunity.com/openid/id/', ''),
               apiUrl = 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' + clientApiKey + '&steamids=' + Steam64Id,
               player = {};
+
           http.get(apiUrl, function(res) {
             res.on('data', function(chunck){
               var responseObj = JSON.parse(chunck.toString());
@@ -62,9 +71,9 @@
         icon: 'fa-steam',
         scope: 'user:username'
       });
-    }
 
-    callback(null, strategies);
+      callback(null, strategies);
+    });
   };
 
   Steam.login = function(steamID, username, avatar, profileUrl, callback) {
@@ -130,15 +139,7 @@
 		data.router.get('/admin/steam', data.middleware.admin.buildHeader, renderAdmin);
 		data.router.get('/api/admin/steam', renderAdmin);
 
-		meta.settings.get('sso-steam', function(err, config) {
-			if (config.hasOwnProperty('apiKey')) {
-				Steam.apiKey = config.apiKey;
-			} else {
-				winston.warn('[plugins/sso-steam] Please complete Steam SSO setup at: /admin/plugins/sso-steam');
-			}
-
-			callback();
-		});
+        callback();
 	};
 
   module.exports = Steam;
